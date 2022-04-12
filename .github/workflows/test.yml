@@ -2,29 +2,31 @@ name: test
 
 on:
   push:
-    branches: [next]
+    branches:
+      - "**"
+
   pull_request:
-    branches: [next]
-  workflow_dispatch:
-    branches: [next]
+    branches:
+      - next
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x, 14.x]
-
-    env:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+
+      - name: Set up pnpm@v6.32.6
+        uses: pnpm/action-setup@v2.2.1
         with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run test
-      - run: npm run coverage
+          version: 6.32.6
+
+      - name: Set up node@v16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "pnpm"
+
+      - run: pnpm install
+      - run: pnpm run test
+      - run: pnpm run coverage
