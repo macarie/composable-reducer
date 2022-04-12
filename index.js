@@ -86,9 +86,7 @@ export const composableReducer = (
     if (reducers.has(normalizedAlias)) {
       if (reducers.has(name)) {
         const composedReducer = reducers.get(name)
-        const aliasIndex = composedReducer.findIndex(
-          (reducer) => reducer === alias
-        )
+        const aliasIndex = composedReducer.indexOf(alias)
 
         composedReducer.splice(
           aliasIndex,

@@ -12,13 +12,16 @@ const handleDispatch = (reducers, actionKey) => (state, action) => {
     )
   }
 
-  return reducers.get(action[actionKey]).reduce(
-    (newState, reducer) => ({
+  let newState = { ...state }
+
+  for (const reducer of reducers.get(action[actionKey])) {
+    newState = {
       ...newState,
       ...reducer(newState, action),
-    }),
-    state
-  )
+    }
+  }
+
+  return newState
 }
 
 export default handleDispatch
